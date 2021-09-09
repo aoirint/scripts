@@ -5,9 +5,9 @@ set -eu
 DATE_STRING=`date '+%Y-%m-%dT%H:%M:%S%:z'`
 
 # default
-cd ~/.local/share/7DaysToDie
+cd "$HOME/.local/share/7DaysToDie"
 # flatpak
-# cd ~/.var/app/com.valvesoftware.Steam/data/7DaysToDie
+# cd "$HOME/.var/app/com.valvesoftware.Steam/data/7DaysToDie"
 
 git add .
 git commit -m "$DATE_STRING"
