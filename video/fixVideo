@@ -1,0 +1,3 @@
+#!/bin/bash
+ffmpeg -c:v copy -c:a copy $@
+
