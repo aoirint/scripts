@@ -1,0 +1,54 @@
+#!/usr/bin/env python3
+
+import os
+import subprocess
+import sys
+from tqdm import tqdm
+
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('--gpu', action='store_true')
+args = parser.parse_args()
+
+
+cwd = os.getcwd()
+dirs = sorted(os.listdir(cwd))
+
+dir_list = []
+files_list = []
+for dir in dirs:
+    dir_path = os.path.join(cwd, dir)
+    if os.path.isfile(dir_path):
+        continue
+    
+    files = sorted(os.listdir(dir_path))
+    target_list = []
+    for file in files:
+        name, ext = os.path.splitext(os.path.basename(file))
+        if ext != '.m2ts':
+            continue
+        
+        target_list.append(file)
+    
+    dir_list.append(dir_path)
+    files_list.append(target_list)
+
+vcodec = 'h264_nvenc' if args.gpu else 'libx264'
+print(f'Codec: {vcodec}')
+
+for dir_path, files in tqdm(zip(dir_list, files_list)):
+    failed_list = []
+    for file in tqdm(files):
+        name, ext = os.path.splitext(os.path.basename(file))
+        m2ts_path = os.path.join(dir_path, file)
+        mp4_path = os.path.join(dir_path, name + '.mp4')
+
+        ret = subprocess.call([ 'ffmpeg', '-y', '-i', m2ts_path, '-vcodec', vcodec, '-acodec', 'aac', '-vsync', '1', '-deinterlace', '-bufsize', '20000k', '-maxrate', '25000k', mp4_path ])
+        if ret != 0:
+            print('Error Code: %d' % ret)
+            failed_list.append(file)
+            continue
+
+        os.remove(m2ts_path)
+    print(failed_list)
+
