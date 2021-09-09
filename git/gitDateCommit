@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -eu
+
+DATE_STRING=`date '+%Y-%m-%dT%H:%M:%S%:z'`
+
+git commit -m "$DATE_STRING"
