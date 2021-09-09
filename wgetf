@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+# Execute Wget with a list file of URL and Filename
+
 import sys
 import subprocess
 import time
