@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -eu
+
+DATE_STRING=`date '+%Y-%m-%dT%H:%M:%S%:z'`
+
+# default
+cd ~/.local/share/Steam.bak/steamapps/common/Kerbal Space Program/saves
+# flatpak
+# cd ~/.var/app/com.valvesoftware.Steam/data/Steam/steamapps/common/Kerbal Space Program/saves
+
+git add .
+git commit -m "$DATE_STRING"
+
+git push origin main
+
