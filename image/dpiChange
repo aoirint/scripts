@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -eu
+DPI="$1"
+SOURCE="$2"
+DEST="$3"
+
+convert -density "$DPI" -units PixelsPerInch "$SOURCE" "$DEST"
