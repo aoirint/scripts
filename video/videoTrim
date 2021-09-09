@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+
+import os
+from pathlib import Path
+import subprocess
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('duration', type=str)
+args = parser.parse_args()
+
+duration = args.duration
+
+
+cwd = Path.cwd()
+files = sorted(filter(lambda p: p.is_file, cwd.iterdir()))
+
+print(files)
+
+for file in files:
+    stem = file.stem
+    ext = file.suffix
+    
+    output = f'{stem}_c{ext}'
+    print(f'{file} => {output}')
+
+    ret = subprocess.call([ 'ffmpeg', '-y', '-i', file, '-t', duration, '-c', 'copy', output ])
+
+

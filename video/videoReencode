@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+
+import os
+from pathlib import Path
+import subprocess
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--gpu', action='store_true')
+args = parser.parse_args()
+
+
+cwd = Path.cwd()
+files = sorted(filter(lambda p: p.is_file, cwd.iterdir()))
+print(files)
+
+vcodec = 'h264_nvenc' if args.gpu else 'libx264'
+print(f'Codec: {vcodec}')
+
+for file in files:
+    stem = file.stem
+    ext = file.suffix
+    
+    output = f'{stem}_c{ext}'
+    print(f'{file} => {output}')
+
+    ret = subprocess.call([ 'ffmpeg', '-y', '-i', file, '-vcodec', vcodec, '-acodec', 'aac', '-vsync', '1', '-deinterlace', '-bufsize', '20000k', '-maxrate', '25000k', output ])
+
+
