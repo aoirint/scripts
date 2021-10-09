@@ -1,3 +1,5 @@
 #!/bin/bash
-x0tigervncserver PasswordFile=~/.vnc/passwd Display=:0
+
+DISP=${1:-:0}
+x0tigervncserver PasswordFile=~/.vnc/passwd Display="${DISP}"
 
