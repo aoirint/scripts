@@ -1,15 +1,16 @@
 #!/bin/bash
 
-INPUT=$1
-OUTDIR=$(dirname ${INPUT})
+INPUT=$(realpath "$1")
+OUTDIR=$(realpath -- "$(dirname "${INPUT}")")
 FILENAME=$(basename -- "${INPUT}")
 EXTENSION="${FILENAME#*.}"
 BASENAME="${FILENAME%%.*}"
 
+mkdir -p "${OUTDIR}"
 ffmpeg -i "${INPUT}" \
-    -map 0:0 -vcodec copy "${OUTDIR}/${BASENAME}_video.${EXTENSION}" \
-    -map 0:1 -vn -acodec copy "${OUTDIR}/${BASENAME}_desktop.m4a" \
-    -map 0:2 -vn -acodec copy "${OUTDIR}/${BASENAME}_mic.m4a" \
-    -map 0:3 -vn -acodec copy "${OUTDIR}/${BASENAME}_meta1.m4a" \
-    -map 0:4 -vn -acodec copy "${OUTDIR}/${BASENAME}_vc.m4a"
+    -map 0:v:0 -vcodec copy "${OUTDIR}/${BASENAME}_video.${EXTENSION}" \
+    -map 0:a:1 -vn -acodec copy "${OUTDIR}/${BASENAME}_app.m4a" \
+    -map 0:a:2 -vn -acodec copy "${OUTDIR}/${BASENAME}_mic.m4a" \
+    -map 0:a:3 -vn -acodec copy "${OUTDIR}/${BASENAME}_meta1.m4a" \
+    -map 0:a:4 -vn -acodec copy "${OUTDIR}/${BASENAME}_vc.m4a"
 
