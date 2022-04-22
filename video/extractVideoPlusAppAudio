@@ -1,0 +1,13 @@
+#!/bin/bash
+
+INPUT=$(realpath "$1")
+#OUTDIR=$(realpath -- "$(dirname "${INPUT}")")
+OUTDIR=.
+FILENAME=$(basename -- "${INPUT}")
+EXTENSION="${FILENAME#*.}"
+BASENAME="${FILENAME%%.*}"
+
+mkdir -p "${OUTDIR}"
+ffmpeg -i "${INPUT}" \
+    -map 0:v:0 -vcodec copy -map 0:a:1 -acodec copy "${OUTDIR}/${BASENAME}_video+appaudio.${EXTENSION}" \
+
