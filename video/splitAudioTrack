@@ -1,7 +1,8 @@
 #!/bin/bash
 
 INPUT=$(realpath "$1")
-OUTDIR=$(realpath -- "$(dirname "${INPUT}")")
+#OUTDIR=$(realpath -- "$(dirname "${INPUT}")")
+OUTDIR=.
 FILENAME=$(basename -- "${INPUT}")
 EXTENSION="${FILENAME#*.}"
 BASENAME="${FILENAME%%.*}"
