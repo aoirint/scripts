@@ -17,5 +17,5 @@ to = args.to
 input_path = args.input_path
 output_path = args.output_path
 
-subprocess.run([ 'ffmpeg', '-ss', ss, '-to', to, '-i', input_path, '-map', '0', '-map_metadata', '0', output], capture_output=True)
+subprocess.run([ 'ffmpeg', '-ss', ss, '-to', to, '-i', input_path, '-map', '0', '-map_metadata', '0', '-c', 'copy', output], capture_output=True)
 
