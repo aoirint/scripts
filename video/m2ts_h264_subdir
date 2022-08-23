@@ -8,6 +8,7 @@ from tqdm import tqdm
 import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('--gpu', action='store_true')
+parser.add_argument('--vaapi', action='store_true')
 args = parser.parse_args()
 
 
@@ -33,7 +34,11 @@ for dir in dirs:
     dir_list.append(dir_path)
     files_list.append(target_list)
 
-vcodec = 'h264_nvenc' if args.gpu else 'libx264'
+vcodec = 'libx264'
+if args.vaapi:
+    vcodec = 'h264_vaapi'
+if args.gpu:
+    vcodec = 'h264_nvenc'
 print(f'Codec: {vcodec}')
 
 for dir_path, files in tqdm(zip(dir_list, files_list)):
@@ -43,7 +48,15 @@ for dir_path, files in tqdm(zip(dir_list, files_list)):
         m2ts_path = os.path.join(dir_path, file)
         mp4_path = os.path.join(dir_path, name + '.mp4')
 
-        ret = subprocess.call([ 'ffmpeg', '-y', '-i', m2ts_path, '-vcodec', vcodec, '-acodec', 'aac', '-vsync', '1', '-deinterlace', '-bufsize', '20000k', '-maxrate', '25000k', mp4_path ])
+        if args.vaapi:
+            vaapi_opts = [ '-vaapi_device', '/dev/dri/renderD128', '-hwaccel', 'vaapi', '-hwaccel_output_format', 'vaapi', '-vf', 'format=nv12|vaapi,hwupload' ]
+            non_vaapi_opts = []
+        else:
+            vaapi_opts = []
+            non_vaapi_opts = [ '-deinterlace' ]
+        thread_opts = [ '-threads', '1' ]
+
+        ret = subprocess.call([ 'ffmpeg', '-y', '-i', m2ts_path, *thread_opts, *vaapi_opts, '-vcodec', vcodec, '-acodec', 'aac', '-vsync', '1', *non_vaapi_opts, '-bufsize', '20000k', '-maxrate', '25000k', mp4_path ])
         if ret != 0:
             print('Error Code: %d' % ret)
             failed_list.append(file)
