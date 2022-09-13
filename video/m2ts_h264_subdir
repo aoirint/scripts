@@ -15,7 +15,6 @@ args = parser.parse_args()
 cwd = os.getcwd()
 dirs = sorted(os.listdir(cwd))
 
-dir_list = []
 files_list = []
 for dir in dirs:
     dir_path = os.path.join(cwd, dir)
@@ -23,16 +22,12 @@ for dir in dirs:
         continue
     
     files = sorted(os.listdir(dir_path))
-    target_list = []
     for file in files:
         name, ext = os.path.splitext(os.path.basename(file))
         if ext != '.m2ts':
             continue
         
-        target_list.append(file)
-    
-    dir_list.append(dir_path)
-    files_list.append(target_list)
+        files_list.append(os.path.join(dir_path, file))
 
 vcodec = 'libx264'
 if args.vaapi:
@@ -41,11 +36,16 @@ if args.gpu:
     vcodec = 'h264_nvenc'
 print(f'Codec: {vcodec}')
 
-for dir_path, files in tqdm(zip(dir_list, files_list)):
-    failed_list = []
-    for file in tqdm(files):
-        name, ext = os.path.splitext(os.path.basename(file))
-        m2ts_path = os.path.join(dir_path, file)
+failed_list = []
+with tqdm(files_list) as pbar:
+    for m2ts_path in pbar:
+        pbar.set_postfix({
+            'm2ts_path': m2ts_path,
+        })
+        pbar.update()
+
+        name, ext = os.path.splitext(os.path.basename(m2ts_path))
+        dir_path = os.path.dirname(m2ts_path)
         mp4_path = os.path.join(dir_path, name + '.mp4')
 
         if args.vaapi:
@@ -59,9 +59,10 @@ for dir_path, files in tqdm(zip(dir_list, files_list)):
         ret = subprocess.call([ 'ffmpeg', '-y', '-i', m2ts_path, *thread_opts, *vaapi_opts, '-vcodec', vcodec, '-acodec', 'aac', '-vsync', '1', *non_vaapi_opts, '-bufsize', '20000k', '-maxrate', '25000k', mp4_path ])
         if ret != 0:
             print('Error Code: %d' % ret)
-            failed_list.append(file)
+            failed_list.append(m2ts_path)
             continue
 
         os.remove(m2ts_path)
-    print(failed_list)
+
+print(failed_list)
 
