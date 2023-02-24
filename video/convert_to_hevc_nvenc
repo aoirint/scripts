@@ -7,7 +7,10 @@ files=$(find . -type f -name '*.mkv')
 for file in $files; do
 	stem=${file%.*}
 
+	# GTX 1080 Ti, color_range tv
 	# ffmpeg -i "$file" -c:v hevc_nvenc -preset p7 -profile:v main -rc constqp -rc-lookahead 1 -spatial-aq 0 -weighted_pred 0 -init_qpI 21 -init_qpP 21 -init_qpB 23 -dpb_size 4 -multipass 2 -g 60 -colorspace:v bt709 -color_primaries:v bt709 -color_trc:v bt709 -color_range:v tv -c:a copy -map 0 -map_metadata 0 "${stem}_hevc_nvenc.mp4"
+
+	# GTX 1080 Ti
 	ffmpeg -i "$file" -c:v hevc_nvenc -preset p7 -profile:v main -rc constqp -rc-lookahead 1 -spatial-aq 0 -weighted_pred 0 -init_qpI 21 -init_qpP 21 -init_qpB 23 -dpb_size 4 -multipass 2 -g 60 -c:a copy -map 0 -map_metadata 0 "${stem}_hevc_nvenc.mp4"
 done
 
