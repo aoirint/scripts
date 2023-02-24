@@ -3,7 +3,7 @@
 set -eux
 IFS=$'\n'
 
-files=$(find . -type f -name '*.mkv')
+files=$(find . -type f -name '*.mkv' | sort)
 for file in $files; do
 	stem=${file%.*}
 
