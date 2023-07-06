@@ -4,13 +4,13 @@ set -euxo pipefail
 
 RETRY_INTERVAL=${1:-60}
 
-date
+date --iso-8601=seconds
 
 until (docker compose pull) do
     sleep "${RETRY_INTERVAL}"
 done
 
-date
+date --iso-8601=seconds
 
 docker compose up -d
 
