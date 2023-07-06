@@ -2,10 +2,12 @@
 
 set -euxo pipefail
 
+RETRY_INTERVAL=${1:-60}
+
 date
 
 until (docker compose pull) do
-    sleep 10
+    sleep "${RETRY_INTERVAL}"
 done
 
 date
