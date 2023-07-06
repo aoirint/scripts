@@ -1,5 +1,5 @@
 #!/bin/bash
 
 DISP=${1:-:0}
-x0tigervncserver PasswordFile=~/.vnc/passwd Display="${DISP}"
+x0tigervncserver PasswordFile=~/.vnc/passwd Display="${DISP}" -fg -rfbport 5900
 
