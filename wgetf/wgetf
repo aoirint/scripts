@@ -17,7 +17,7 @@ def wgetf(file: str, interval: float):
 
     for url, name in url_names:
         Path(name).parent.mkdir(exist_ok=True, parents=True)
-        subprocess.call([ 'wget', url, '-O', name ])
+        subprocess.call([ 'wget','--continue',  url, '-O', name ])
         time.sleep(interval)    
 
 if __name__ == '__main__':
