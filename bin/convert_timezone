@@ -1,0 +1,67 @@
+#!/usr/bin/env python
+from argparse import ArgumentParser
+from datetime import datetime, timezone
+import sys
+from typing import TextIO
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+def main() -> None:
+    default_timezone = datetime.now().astimezone().tzinfo
+    if default_timezone is None:
+        default_timezone = timezone.utc
+
+    parser = ArgumentParser()
+    parser.add_argument(
+        "-i",
+        "--input_file",
+        type=str,
+    )
+    parser.add_argument(
+        "-o",
+        "--output_file",
+        type=str,
+    )
+    parser.add_argument(
+        "--timezone",
+        type=ZoneInfo,
+        default=default_timezone,
+    )
+    args = parser.parse_args()
+
+    input_file: str | None = args.input_file
+    output_file: str | None = args.output_file
+    tz: ZoneInfo = args.timezone
+
+    try:
+        input_stream: TextIO
+        if input_file is not None:
+            input_stream = Path(input_file).open(mode="r", encoding="utf-8")
+        else:
+            input_stream = sys.stdin
+
+        try:
+            output_stream: TextIO
+            if output_file is not None:
+                output_stream = Path(output_file).open(mode="w", encoding="utf-8")
+            else:
+                output_stream = sys.stdout
+
+            string = input()
+            date_string_list = string.strip().split("\n")
+
+            for date_string in date_string_list:
+                print(
+                    datetime.fromisoformat(date_string).astimezone(tz).isoformat(),
+                    file=output_stream,
+                )
+        finally:
+            if output_file is not None:
+                output_stream.close()
+    finally:
+        if input_file is not None:
+            input_stream.close()
+
+
+if __name__ == "__main__":
+    main()
