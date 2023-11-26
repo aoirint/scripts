@@ -13,7 +13,7 @@ def wgetf(file: str, interval: float):
         urls_text = fp.read()
 
     urls = urls_text.split('\n')
-    url_names = [ url.split(' ') for url in urls if len(url) > 0 ]
+    url_names = [ url.split() for url in urls if len(url) > 0 ]
 
     for url, name in url_names:
         Path(name).parent.mkdir(exist_ok=True, parents=True)

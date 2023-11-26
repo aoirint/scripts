@@ -47,9 +47,7 @@ def main() -> None:
             else:
                 output_stream = sys.stdout
 
-            string = input()
-            date_string_list = string.strip().split("\n")
-
+            date_string_list = map(lambda string: string.strip(), input_stream.readlines())
             for date_string in date_string_list:
                 print(
                     datetime.fromisoformat(date_string).astimezone(tz).isoformat(),
