@@ -1,0 +1,12 @@
+#!/usr/bin/env python
+from getpass import getpass
+import time
+import pyautogui
+
+string = getpass("string: ")
+
+print("waiting")
+time.sleep(3)
+
+print("pasting")
+pyautogui.write(string)
