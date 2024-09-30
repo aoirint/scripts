@@ -11,6 +11,10 @@ rsync -av --exclude=".git/" --exclude="*.log" "${SOURCE_DIR}/" "${REPO_DIR}/"
 
 cd "${REPO_DIR}"
 
+if [[ -z $(git status --porcelain) ]]; then
+  exit 0
+fi
+
 git add .
 git commit -m "$DATE_STRING"
 
