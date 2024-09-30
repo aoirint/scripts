@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -eu
+
+DATE_STRING=$(date -u "+%Y-%m-%dT%H-%M-%SZ")
+
+SOURCE_DIR="$HOME/AppData/LocalLow/ZeekerssRBLX/Lethal Company"
+REPO_DIR="$HOME/AppData/LocalLow/ZeekerssRBLX/lethal_company_save_git"
+
+rsync -av --exclude=".git/" --exclude="*.log" "${SOURCE_DIR}/" "${REPO_DIR}/"
+
+cd "${REPO_DIR}"
+
+git add .
+git commit -m "$DATE_STRING"
+
+git push origin main
