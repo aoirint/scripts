@@ -7,7 +7,7 @@ DATE_STRING=$(date -u "+%Y-%m-%dT%H-%M-%SZ")
 SOURCE_DIR="$HOME/AppData/LocalLow/ZeekerssRBLX/Lethal Company"
 REPO_DIR="$HOME/AppData/LocalLow/ZeekerssRBLX/lethal_company_save_git"
 
-rsync -av --exclude=".git/" --exclude="*.log" "${SOURCE_DIR}/" "${REPO_DIR}/"
+rsync -av --delete --exclude=".git/" --exclude="*.log" "${SOURCE_DIR}/" "${REPO_DIR}/"
 
 cd "${REPO_DIR}"
 
