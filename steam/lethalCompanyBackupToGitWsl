@@ -11,7 +11,7 @@ rsync -av --delete --exclude=".git/" --exclude="*.log" "${SOURCE_DIR}/" "${REPO_
 
 cd "${REPO_DIR}"
 
-if [[ -n $(git status --porcelain) ]]; then
+if [[ -z $(git status --porcelain) ]]; then
   exit 0
 fi
 
