@@ -4,8 +4,8 @@ set -eu
 
 DATE_STRING=$(date -u "+%Y-%m-%dT%H-%M-%SZ")
 
-SOURCE_DIR="$HOME/AppData/LocalLow/ZeekerssRBLX/Lethal Company"
-REPO_DIR="$HOME/AppData/LocalLow/ZeekerssRBLX/lethal_company_save_git"
+SOURCE_DIR="$HOME/AppData/LocalLow/tokoronyori/BOKURA"
+REPO_DIR="$HOME/AppData/LocalLow/tokoronyori/bokura_save_git"
 
 echo "syncing: ${SOURCE_DIR} -> ${REPO_DIR}"
 rsync -av --delete --exclude=".git/" --exclude="*.log" "${SOURCE_DIR}/" "${REPO_DIR}/"
