@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -eu
+
+DATE_STRING=$(date -u "+%Y-%m-%dT%H-%M-%SZ")
+
+SOURCE_DIR="$HOME/AppData/LocalLow/Magnum Scriptum Ltd/Quasimorph"
+REPO_DIR="$HOME/AppData/LocalLow/Magnum Scriptum Ltd/quasimorph_save_git"
+
+echo "syncing: ${SOURCE_DIR} -> ${REPO_DIR}"
+rsync -av --delete --exclude=".git/" --exclude="*.log" "${SOURCE_DIR}/" "${REPO_DIR}/"
+
+cd "${REPO_DIR}"
+
+if [[ ! -d ".git" ]]; then
+    git init
+fi
+
+if [[ -z $(git status --porcelain) ]]; then
+    exit 0
+fi
+
+git add .
+git commit -m "$DATE_STRING"
+
+echo "pushing: ${REPO_DIR} -> $(git remote get-url origin)"
+git push origin main
